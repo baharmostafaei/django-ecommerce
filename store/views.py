@@ -2,7 +2,15 @@ from django.shortcuts import render, get_object_or_404
 from .models import Product
 from category.models import Category
 
-
+def store_page(request):
+    products = Product.objects.all().filter(is_available=True)
+    products = Product.objects.all()
+    product_count = products.count()
+    context = {
+        'products': products,
+        'product_count': product_count,
+    }
+    return render(request, 'store/store.html', context)
 def store(request, category_slug=None):
     categories = None
     products = None
