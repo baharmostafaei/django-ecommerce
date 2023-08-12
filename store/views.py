@@ -1,6 +1,9 @@
 from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse
 from .models import Product
 from category.models import Category
+from carts.views import _cart_id
+from carts.models import CartItem
 
 def store_page(request):
     products = Product.objects.all().filter(is_available=True)
@@ -31,10 +34,12 @@ def store(request, category_slug=None):
 def product_detail(request, category_slug, product_slug):
     try:
         product = Product.objects.get(category__slug=category_slug, slug=product_slug)
+        in_cart = CartItem.objects.filter(cart__cart_id=_cart_id(request), product=product).exists() 
     except Exception as e:
         raise e
     context = {
-        'product':product
+        'product': product,
+        'in_cart': in_cart,
     }
 
     return render(request, 'store/product_detail.html', context)
