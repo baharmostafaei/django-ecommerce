@@ -115,6 +115,7 @@
     </header><!-- sect-heading -->
     
     <div class="row">
+        {% if products %}
         {% for product in products %}
         
         <div class="col-md-4">
@@ -139,6 +140,13 @@
             </figure>
         </div> <!-- col.// -->
         {% endfor %}
+        {% else %}
+        <div>
+            <h5>
+            No Result
+            </h5>
+        </div>
+        {% endif %}
     
         
     </div> <!-- row end.// -->
