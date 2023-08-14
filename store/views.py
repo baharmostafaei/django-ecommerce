@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from .models import Product
 from category.models import Category
 from carts.views import _cart_id
@@ -8,9 +9,12 @@ from carts.models import CartItem
 def store_page(request):
     products = Product.objects.all().filter(is_available=True)
     products = Product.objects.all()
+    paginator = Paginator(products, 3)
+    page = request.GET.get('page')
+    paged_product = paginator.get_page(page)
     product_count = products.count()
     context = {
-        'products': products,
+        'products': paged_product,
         'product_count': product_count,
     }
     return render(request, 'store/store.html', context)
@@ -21,12 +25,18 @@ def store(request, category_slug=None):
     if category_slug != None:
         categories = get_object_or_404(Category, slug=category_slug)
         products = Product.objects.filter(category=categories, is_available=True)
+        paginator = Paginator(products, 1)
+        page = request.GET.get('page')
+        paged_product = paginator.get_page(page)
         product_count = products.count()
     else:
-        products = Product.objects.all()
-        product_count = products.count()
+        products = Product.objects.all(is_available=True)
+        paginator = Paginator(products, 3)
+        page = request.GET.get('page')
+        paged_product = paginator.get_page(page)
+        product_count = paged_product.count()
     context = {
-        'products': products,
+        'products': paged_product,
         'product_count': product_count,
     }
     return render(request, 'store/store.html', context=context)
