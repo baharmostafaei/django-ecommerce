@@ -21,7 +21,7 @@ def register(request):
             user.is_active = True
             user.save()
             messages.success(request, 'successfully registered.')
-            return redirect('register')
+            return redirect('login')
     else:
         form = RegistrationForm()
     context = {
@@ -40,10 +40,14 @@ def login(request):
             return redirect('home')
         else:
             messages.error(request, 'Invalid login information, Try again.')
-            return redirect('login')
+            return redirect('dashboard')
     return render(request, 'accounts/login.html')
 @login_required(login_url= 'login')
 def logout(request):
     auth.logout(request)
     messages.success(request, 'Logout Successfully')
     return redirect('login')
+
+@login_required(login_url= 'login')
+def dashboard(request):
+    return render(request, 'accounts/dashboard.html')
