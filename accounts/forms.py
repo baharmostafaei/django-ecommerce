@@ -13,15 +13,6 @@ class RegistrationForm(forms.ModelForm):
         model = Account
         fields = ['first_name', 'last_name', 'phone', 'email', 'password']
 
-    def __init__(self,*args, **kwargs):
-        super(RegistrationForm, self).__init__(*args, **kwargs)
-        self.fields['first_name'].widget.attrs['placeholder'] = 'Enter Your First Name'
-        self.fields['last_name'].widget.attrs['placeholder'] = 'Enter Your Last Name'
-        self.fields['email'].widget.attrs['placeholder'] = 'Enter Your Email'
-        self.fields['phone'].widget.attrs['placeholder'] = 'Enter Your Phone Number'
-        for field in self.fields:
-            self.fields[field].widget.attrs['class'] = 'form-control'
-
     def clean(self):
         cleaned_data = super(RegistrationForm, self).clean()
         password = cleaned_data.get('password')
@@ -31,3 +22,12 @@ class RegistrationForm(forms.ModelForm):
             raise forms.ValidationError(
                 "Password Does Not Match!"
             )
+
+    def __init__(self,*args, **kwargs):
+        super(RegistrationForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'].widget.attrs['placeholder'] = 'Enter Your First Name'
+        self.fields['last_name'].widget.attrs['placeholder'] = 'Enter Your Last Name'
+        self.fields['email'].widget.attrs['placeholder'] = 'Enter Your Email'
+        self.fields['phone'].widget.attrs['placeholder'] = 'Enter Your Phone Number'
+        for field in self.fields:
+            self.fields[field].widget.attrs['class'] = 'form-control'

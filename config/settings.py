@@ -141,3 +141,10 @@ AUTH_USER_MODEL = 'accounts.Account'
 # Media 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+# Django Messages
+from django.contrib.messages import constants as messages
+
+MESSAGE_TAGS = {
+    messages.ERROR : 'danger',
+}
