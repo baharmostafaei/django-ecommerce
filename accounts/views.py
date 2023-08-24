@@ -14,6 +14,8 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator    
 from django.core.mail import EmailMessage
 
+import requests
+
 def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
@@ -80,7 +82,15 @@ def login(request):
             except:
                 pass
             auth.login(request, user)
-            return redirect('home')
+            url = request.META.get('HTTP_REFERER')
+            try:
+                query = requests.utils.urlparse(url).query
+                params = dict(x.split('=') for x in query.split('&'))
+                if 'next' in params:
+                    next_page = params['next']
+                    return redirect(next_page)
+            except:
+                return redirect('home')
         else:
             messages.error(request, 'Invalid login information, Try again.')
             return redirect('dashboard')
